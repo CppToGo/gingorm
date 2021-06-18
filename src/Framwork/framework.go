@@ -1,7 +1,6 @@
 package Framwork
 
 import (
-	"gingorm/src"
 	"github.com/gin-gonic/gin"
 )
 
@@ -90,11 +89,9 @@ func (s *Service) RegisterPath(handler HandleInfc) error {
 }
 
 func (s *Service) RegisterRouter() error {
-	var err error
-	err = s.RegisterPath(new(main.CoredataQueryHandle))
-	return err
+	panic("implement me")
 }
 
 func (s *Service) Run() error {
-	return s.Engine.Run(s.listenAddr)
+	return s.Engine.Run(s.ListenAddr)
 }
