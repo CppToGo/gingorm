@@ -6,8 +6,8 @@ import (
 
 func main() {
 	fw := Framwork.Framework{}
-
-	err := fw.Init(new(TestServer))
+	server := new(TestServer)
+	err := fw.Init(server)
 	if err != nil {
 		panic(err)
 	}

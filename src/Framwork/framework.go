@@ -1,6 +1,8 @@
 package Framwork
 
 import (
+	// "fmt"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -10,8 +12,21 @@ type Framework struct {
 
 
 func (fw *Framework)Init(s ServiceInfc)error{
+	var err error
+	s.Init()
+	//加载配置
+	err = s.LoadConfig()
+	if err != nil {
+		return err
+	}
+	// 注册路由
+	err = s.RegisterRouter()
+	if err != nil {
+		return err
+	}
+	
 	fw.s = s
-	return fw.s.Init()
+	return nil
 }
 
 func (fw *Framework)Run()error{
@@ -29,11 +44,11 @@ type Handle struct {
 }
 
 func (h *Handle) SetRootRouter() {
-	panic("implement me")
+	h.RootRouter = "/"
 }
 
 func (h *Handle) Process(group *gin.RouterGroup) error {
-	panic("implement me")
+	return nil
 }
 
 func (h *Handle) GetRootRouter() string {
@@ -56,26 +71,8 @@ type Service struct {
 }
 
 func (s *Service) Init() error {
-	var err error
 	// 获取实例
 	s.Engine = gin.Default()
-
-	//加载配置
-	err = s.LoadConfig()
-	if err != nil {
-		return err
-	}
-	// 注册路由
-	err = s.RegisterRouter()
-	if err != nil {
-		return err
-	}
-
-	//启动
-	err = s.Run()
-	if err != nil {
-		return err
-	}
 	return nil
 }
 
@@ -84,12 +81,15 @@ func (s *Service) LoadConfig() error {
 }
 
 func (s *Service) RegisterPath(handler HandleInfc) error {
+	handler.SetRootRouter()
 	g1 := s.Engine.Group(handler.GetRootRouter())
 	return handler.Process(g1)
 }
 
 func (s *Service) RegisterRouter() error {
-	panic("implement me")
+	var err error
+	err = s.RegisterPath(new(Handle))
+	return err
 }
 
 func (s *Service) Run() error {
