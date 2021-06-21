@@ -3,6 +3,7 @@ package Framwork
 import (
 	// "fmt"
 
+	"fmt"
 	"github.com/gin-gonic/gin"
 )
 
@@ -11,22 +12,30 @@ type Framework struct {
 }
 
 
-func (fw *Framework)Init(s ServiceInfc)error{
+func (fw *Framework)Init(s ServiceInfc){
+	defer func() {
+		if pic := recover() ; pic != nil {
+			fmt.Println(pic)
+		}
+	}()
 	var err error
-	s.Init()
+	err  = s.Init()
+	if err != nil {
+		panic(err)
+	}
 	//加载配置
 	err = s.LoadConfig()
 	if err != nil {
-		return err
+		panic(err)
 	}
 	// 注册路由
 	err = s.RegisterRouter()
 	if err != nil {
-		return err
+		panic(err)
 	}
 	
 	fw.s = s
-	return nil
+	return
 }
 
 func (fw *Framework)Run()error{

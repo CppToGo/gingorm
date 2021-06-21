@@ -5,15 +5,10 @@ import (
 )
 
 func main() {
+
 	fw := Framwork.Framework{}
 	server := new(TestServer)
-	err := fw.Init(server)
-	if err != nil {
-		panic(err)
-	}
+	_ = fw.Init(server)
 
-	err = fw.Run()
-	if err != nil{
-		panic(err)
-	}
+	_ = fw.Run()
 }
