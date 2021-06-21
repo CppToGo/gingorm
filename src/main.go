@@ -7,8 +7,8 @@ import (
 func main() {
 
 	fw := Framwork.Framework{}
-	server := new(TestServer)
-	_ = fw.Init(server)
 
-	_ = fw.Run()
+	fw.Init(new(TestServer))
+
+	fw.Run()
 }
