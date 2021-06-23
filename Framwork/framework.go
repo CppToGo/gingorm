@@ -53,11 +53,11 @@ type Handle struct {
 }
 
 func (h *Handle) SetRootRouter() {
-	h.RootRouter = "/"
+	panic("implement me")
 }
 
 func (h *Handle) Process(group *gin.RouterGroup) error {
-	return nil
+	panic("implement me")
 }
 
 func (h *Handle) GetRootRouter() string {
@@ -79,13 +79,19 @@ type Service struct {
 	ListenAddr string
 }
 
+func (s *Service) LoadConfig() error {
+	panic("implement me")
+}
+
+func (s *Service) RegisterRouter() error {
+	panic("implement me")
+}
+
 func (s *Service) Init() error {
 	// 获取实例
 	s.Engine = gin.Default()
-	return nil
-}
-
-func (s *Service) LoadConfig() error {
+	// 加载deploy配置
+	
 	return nil
 }
 
@@ -93,12 +99,6 @@ func (s *Service) RegisterPath(handler HandleInfc) error {
 	handler.SetRootRouter()
 	g1 := s.Engine.Group(handler.GetRootRouter())
 	return handler.Process(g1)
-}
-
-func (s *Service) RegisterRouter() error {
-	var err error
-	err = s.RegisterPath(new(Handle))
-	return err
 }
 
 func (s *Service) Run() error {

@@ -6,14 +6,12 @@ function compile(){
     cd $1/src
     go build -o ../bin/$1
     cd - > /dev/null
-    echo ">>>> build $1 done <<<<"
 }
 
 function build(){
     if [ $# -ne 0 ]; then
         for d in $@; do
             local d=${d%%/*}
-            echo $d
             compile $d
         done
     else
