@@ -28,9 +28,27 @@ function sigout(){
 
 trap sigout SIGINT
 
+function proto(){
+    echo "cd `pwd`"
+    cd $1
+    for i in `ls`;do
+        if [ -d $i ]; then
+            proto $i
+        else if [[ $i =~ \.proto$ ]]; then
+            echo ">>>> protoc $i"
+            protoc --go_out=./ $i
+            fi
+        fi
+    done
+    cd - > /dev/null
+}
+
 case $1 in
 	"gz")
 	tar -czvf gingorm.tar.gz src/ vendor/ template/ go.mod go.sum build.sh
+	;;
+	"proto/")
+	    proto ./$1
 	;;
 	*)
     build $@

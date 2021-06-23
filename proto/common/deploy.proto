@@ -2,5 +2,8 @@ syntax = "proto3";
 package deploy;
 
 message Deploy {
-    string httpAddr = 1;
+    uint32 ServerID = 1;
+    string HttpAddr = 2;
+    uint32 SendLimit = 3;
+    uint32 RecvLimit = 4;
 }
