@@ -10,14 +10,12 @@ type TestServer struct {
 
 func (s *TestServer) LoadConfig() error {
 	s.Engine.LoadHTMLGlob("./template/*")
-	s.ListenAddr = "localhost:8080"
+	s.Addr = "localhost:8080"
 	return nil
 }
 
 
-func (s *TestServer) RegisterRouter() error {
-	var err error
-	s.RegisterPath(new(CoredataQueryHandle))
-	s.RegisterPath(new(TestHandle))
-	return err
+func (s *TestServer) RegisterRouter(){
+	s.RegisterPath("/db", new(CoredataQueryHandle))
+	s.RegisterPath("/test", new(TestHandle))
 }

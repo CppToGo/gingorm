@@ -46,11 +46,7 @@ func OneStringIndexHashFunc(num int, input interface{}) int {
 }
 
 type CoredataQueryHandle struct {
-	Framwork.Handle
-}
-
-func (h *CoredataQueryHandle) SetRootRouter(){
-	h.RootRouter = "/db"
+	Framwork.GroupRouter
 }
 
 func (h *CoredataQueryHandle) Process(group *gin.RouterGroup) error {

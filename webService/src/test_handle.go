@@ -9,11 +9,7 @@ import (
 
 
 type TestHandle struct {
-	Framwork.Handle
-}
-
-func (h *TestHandle) SetRootRouter() {
-	h.RootRouter = "/test"
+	Framwork.GroupRouter
 }
 
 func (h *TestHandle) Process(group *gin.RouterGroup) error {

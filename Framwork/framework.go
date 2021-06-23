@@ -29,10 +29,7 @@ func (fw *Framework)Init(s ServiceInfc){
 		panic(err)
 	}
 	// 注册路由
-	err = s.RegisterRouter()
-	if err != nil {
-		panic(err)
-	}
+	s.RegisterRouter()
 	
 	fw.s = s
 	return
@@ -42,26 +39,15 @@ func (fw *Framework)Run()error{
 	return fw.s.Run()
 }
 
-type HandleInfc interface {
-	GetRootRouter()string
-	SetRootRouter()
+type GroupRouterInfc interface {
 	Process(group *gin.RouterGroup)error
 }
 
-type Handle struct {
-	RootRouter string
+type GroupRouter struct {
 }
 
-func (h *Handle) SetRootRouter() {
+func (h *GroupRouter) Process(group *gin.RouterGroup) error {
 	panic("implement me")
-}
-
-func (h *Handle) Process(group *gin.RouterGroup) error {
-	panic("implement me")
-}
-
-func (h *Handle) GetRootRouter() string {
-	return h.RootRouter
 }
 
 
@@ -69,21 +55,21 @@ func (h *Handle) GetRootRouter() string {
 type ServiceInfc interface {
 	Init()error
 	LoadConfig()error
-	RegisterPath(handler HandleInfc)error
-	RegisterRouter()error
+	RegisterPath(PrefixRouter string, handler GroupRouterInfc)
+	RegisterRouter()
 	Run()error
 }
 
 type Service struct {
-	Engine     *gin.Engine
-	ListenAddr string
+	Engine *gin.Engine
+	Addr   string
 }
 
 func (s *Service) LoadConfig() error {
 	panic("implement me")
 }
 
-func (s *Service) RegisterRouter() error {
+func (s *Service) RegisterRouter(){
 	panic("implement me")
 }
 
@@ -95,12 +81,17 @@ func (s *Service) Init() error {
 	return nil
 }
 
-func (s *Service) RegisterPath(handler HandleInfc) error {
-	handler.SetRootRouter()
-	g1 := s.Engine.Group(handler.GetRootRouter())
-	return handler.Process(g1)
+func (s *Service) RegisterPath(PrefixRouter string,handler GroupRouterInfc)  {
+	group := s.Engine.Group(PrefixRouter)
+	if group == nil {
+		panic(fmt.Errorf("create group router failed: %v", PrefixRouter))
+	}
+	err := handler.Process(group)
+	if err != nil {
+		panic(fmt.Errorf("RegistProcess err :%v", err))
+	}
 }
 
 func (s *Service) Run() error {
-	return s.Engine.Run(s.ListenAddr)
+	return s.Engine.Run(s.Addr)
 }
