@@ -4,7 +4,15 @@ import (
 	// "fmt"
 
 	"fmt"
+	deploy "gingorm/proto/common"
 	"github.com/gin-gonic/gin"
+	"github.com/golang/protobuf/proto"
+	"io/ioutil"
+)
+
+const (
+	ServerDeployPath = "../deploy"
+	ServerDeployCfg_Server = "server.cfg"
 )
 
 type Framework struct {
@@ -62,7 +70,7 @@ type ServiceInfc interface {
 
 type Service struct {
 	Engine *gin.Engine
-	Addr   string
+	Deploy *deploy.Deploy
 }
 
 func (s *Service) LoadConfig() error {
@@ -77,7 +85,11 @@ func (s *Service) Init() error {
 	// 获取实例
 	s.Engine = gin.Default()
 	// 加载deploy配置
-	
+	s.Deploy = new(deploy.Deploy)
+	err := LoadProtoMessage(ServerDeployPath + "/" + ServerDeployCfg_Server, s.Deploy)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -93,5 +105,18 @@ func (s *Service) RegisterPath(PrefixRouter string,handler GroupRouterInfc)  {
 }
 
 func (s *Service) Run() error {
-	return s.Engine.Run(s.Addr)
+	return s.Engine.Run(s.Deploy.GetHttpAddr())
+}
+
+
+func LoadProtoMessage(filePath string , message proto.Message)(error) {
+	file, err := ioutil.ReadFile(filePath)
+	if err != nil {
+		return err
+	}
+	err = proto.UnmarshalText(string(file), message)
+	if err != nil {
+		return  err
+	}
+	return nil
 }

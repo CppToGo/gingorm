@@ -1,0 +1,6 @@
+syntax = "proto3";
+package deploy;
+
+message Deploy {
+    string httpAddr = 1;
+}

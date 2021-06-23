@@ -5,7 +5,7 @@ function compile(){
     cd $1/src
     go build -o ../bin/$1
     cd - > /dev/null
-    echo "$1 done >>>>"
+    echo "$1 done..."
 }
 
 function build(){

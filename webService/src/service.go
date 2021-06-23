@@ -9,8 +9,7 @@ type TestServer struct {
 }
 
 func (s *TestServer) LoadConfig() error {
-	s.Engine.LoadHTMLGlob("./template/*")
-	s.Addr = "localhost:8080"
+	s.Engine.LoadHTMLGlob("../template/*")
 	return nil
 }
 
