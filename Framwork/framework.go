@@ -129,7 +129,7 @@ func RecordPid(){
 	// 获取pid
 	pid := os.Getpid()
 
-	file, err := os.OpenFile(fmt.Sprintf("%v.pid", procName), os.O_CREATE, os.FileMode(0777))
+	file, err := os.OpenFile(fmt.Sprintf("%v.pid", procName), os.O_CREATE, os.FileMode(0644))
 	if err != nil {
 		panic(err)
 	}
