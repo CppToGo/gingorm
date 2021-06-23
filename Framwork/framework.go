@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/golang/protobuf/proto"
 	"io/ioutil"
+	"os"
 )
 
 const (
@@ -38,12 +39,13 @@ func (fw *Framework)Init(s ServiceInfc){
 	}
 	// 注册路由
 	s.RegisterRouter()
-	
+
 	fw.s = s
 	return
 }
 
 func (fw *Framework)Run()error{
+	RecordPid()
 	return fw.s.Run()
 }
 
@@ -119,4 +121,23 @@ func LoadProtoMessage(filePath string , message proto.Message)(error) {
 		return  err
 	}
 	return nil
+}
+
+func RecordPid(){
+	// 获取进程名
+	procName := os.Args[0]
+	// 获取pid
+	pid := os.Getpid()
+
+	file, err := os.OpenFile(fmt.Sprintf("%v.pid", procName), os.O_CREATE, os.FileMode(0777))
+	if err != nil {
+		panic(err)
+	}
+	defer file.Close()
+
+	_, err = file.WriteString(fmt.Sprintf("%d", pid))
+	if err != nil {
+		panic(err)
+	}
+
 }
