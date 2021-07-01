@@ -1,5 +1,5 @@
-module gingorm
-
+module gingorm/v1
+ 
 go 1.15
 
 require (
